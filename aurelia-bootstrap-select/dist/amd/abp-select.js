@@ -63,7 +63,7 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
   }
 
-  var _dec, _dec2, _dec3, _dec4, _dec5, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16, _descriptor17, _descriptor18, _descriptor19, _descriptor20, _descriptor21, _descriptor22, _descriptor23, _descriptor24;
+  var _dec, _dec2, _dec3, _dec4, _dec5, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _descriptor14, _descriptor15, _descriptor16, _descriptor17, _descriptor18, _descriptor19, _descriptor20, _descriptor21, _descriptor22, _descriptor23;
 
   var AbpSelectCustomElement = exports.AbpSelectCustomElement = (_dec = (0, _aureliaFramework.inject)(Element, _utilService.UtilService, _aureliaBinding.BindingEngine), _dec2 = (0, _aureliaFramework.bindable)({ defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec3 = (0, _aureliaFramework.bindable)({ defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec4 = (0, _aureliaFramework.bindable)({ defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec5 = (0, _aureliaFramework.bindable)({ defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec(_class = (_class2 = function () {
     function AbpSelectCustomElement(elm, utilService, bindingEngine) {
@@ -97,27 +97,25 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
 
       _initDefineProp(this, 'placeholder', _descriptor13, this);
 
-      _initDefineProp(this, 'readonly', _descriptor14, this);
+      _initDefineProp(this, 'required', _descriptor14, this);
 
-      _initDefineProp(this, 'required', _descriptor15, this);
+      _initDefineProp(this, 'selected', _descriptor15, this);
 
-      _initDefineProp(this, 'selected', _descriptor16, this);
+      _initDefineProp(this, 'onChanged', _descriptor16, this);
 
-      _initDefineProp(this, 'onChanged', _descriptor17, this);
+      _initDefineProp(this, 'onHide', _descriptor17, this);
 
-      _initDefineProp(this, 'onHide', _descriptor18, this);
+      _initDefineProp(this, 'onHidden', _descriptor18, this);
 
-      _initDefineProp(this, 'onHidden', _descriptor19, this);
+      _initDefineProp(this, 'onLoaded', _descriptor19, this);
 
-      _initDefineProp(this, 'onLoaded', _descriptor20, this);
+      _initDefineProp(this, 'onRendered', _descriptor20, this);
 
-      _initDefineProp(this, 'onRendered', _descriptor21, this);
+      _initDefineProp(this, 'onRefreshed', _descriptor21, this);
 
-      _initDefineProp(this, 'onRefreshed', _descriptor22, this);
+      _initDefineProp(this, 'onShow', _descriptor22, this);
 
-      _initDefineProp(this, 'onShow', _descriptor23, this);
-
-      _initDefineProp(this, 'onShown', _descriptor24, this);
+      _initDefineProp(this, 'onShown', _descriptor23, this);
 
       this.elm = elm;
       this.util = utilService;
@@ -314,6 +312,7 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
 
       setTimeout(function () {
         _this5.domElm.selectpicker('refresh');
+        _this5.renderPreSelection();
       });
     };
 
@@ -435,6 +434,19 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
       }
     };
 
+    AbpSelectCustomElement.prototype.renderPreSelection = function renderPreSelection() {
+      var newValue = this._originalSelectedIndexes || this._originalSelectedObjects;
+      var selection = this.findItems(this.collection, newValue, this.objectKey);
+      if (this.isEmptySelection(selection)) {
+        this.selectedValue = this.util.isObject(this.collection[0]) ? this.collection[0][this.objectKey] : this.collection[0];
+        this.selectedItem = this.collection[0];
+      } else {
+        this.selectedValue = selection.index;
+        this.selectedItem = selection.item;
+      }
+      this.renderSelection(selection);
+    };
+
     AbpSelectCustomElement.prototype.selectedItemChanged = function selectedItemChanged(newValue, oldValue) {
       if (!this.util.isEqual(newValue, oldValue)) {
         var selection = this.findItems(this.collection, newValue || this._originalSelectedIndexes, this.objectKey);
@@ -460,16 +472,7 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
       var _this7 = this;
 
       this.domElm.on('loaded.bs.select', function (e) {
-        var newValue = _this7._originalSelectedIndexes || _this7._originalSelectedObjects;
-        var selection = _this7.findItems(_this7.collection, newValue, _this7.objectKey);
-        if (_this7.isEmptySelection(selection)) {
-          _this7.selectedValue = _this7.util.isObject(_this7.collection[0]) ? _this7.collection[0][_this7.objectKey] : _this7.collection[0];
-          _this7.selectedItem = _this7.collection[0];
-        } else {
-          _this7.selectedValue = selection.index;
-          _this7.selectedItem = selection.item;
-        }
-        _this7.renderSelection(selection);
+        _this7.renderPreSelection();
       });
     };
 
@@ -535,41 +538,36 @@ define(['exports', 'aurelia-framework', './util-service', 'jquery', './picker-gl
   }), _descriptor13 = _applyDecoratedDescriptor(_class2.prototype, 'placeholder', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor14 = _applyDecoratedDescriptor(_class2.prototype, 'readonly', [_aureliaFramework.bindable], {
+  }), _descriptor14 = _applyDecoratedDescriptor(_class2.prototype, 'required', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: function initializer() {
       return false;
     }
-  }), _descriptor15 = _applyDecoratedDescriptor(_class2.prototype, 'required', [_aureliaFramework.bindable], {
-    enumerable: true,
-    initializer: function initializer() {
-      return false;
-    }
-  }), _descriptor16 = _applyDecoratedDescriptor(_class2.prototype, 'selected', [_aureliaFramework.bindable], {
+  }), _descriptor15 = _applyDecoratedDescriptor(_class2.prototype, 'selected', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor17 = _applyDecoratedDescriptor(_class2.prototype, 'onChanged', [_aureliaFramework.bindable], {
+  }), _descriptor16 = _applyDecoratedDescriptor(_class2.prototype, 'onChanged', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor18 = _applyDecoratedDescriptor(_class2.prototype, 'onHide', [_aureliaFramework.bindable], {
+  }), _descriptor17 = _applyDecoratedDescriptor(_class2.prototype, 'onHide', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor19 = _applyDecoratedDescriptor(_class2.prototype, 'onHidden', [_aureliaFramework.bindable], {
+  }), _descriptor18 = _applyDecoratedDescriptor(_class2.prototype, 'onHidden', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor20 = _applyDecoratedDescriptor(_class2.prototype, 'onLoaded', [_aureliaFramework.bindable], {
+  }), _descriptor19 = _applyDecoratedDescriptor(_class2.prototype, 'onLoaded', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor21 = _applyDecoratedDescriptor(_class2.prototype, 'onRendered', [_aureliaFramework.bindable], {
+  }), _descriptor20 = _applyDecoratedDescriptor(_class2.prototype, 'onRendered', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor22 = _applyDecoratedDescriptor(_class2.prototype, 'onRefreshed', [_aureliaFramework.bindable], {
+  }), _descriptor21 = _applyDecoratedDescriptor(_class2.prototype, 'onRefreshed', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor23 = _applyDecoratedDescriptor(_class2.prototype, 'onShow', [_aureliaFramework.bindable], {
+  }), _descriptor22 = _applyDecoratedDescriptor(_class2.prototype, 'onShow', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
-  }), _descriptor24 = _applyDecoratedDescriptor(_class2.prototype, 'onShown', [_aureliaFramework.bindable], {
+  }), _descriptor23 = _applyDecoratedDescriptor(_class2.prototype, 'onShown', [_aureliaFramework.bindable], {
     enumerable: true,
     initializer: null
   })), _class2)) || _class);
